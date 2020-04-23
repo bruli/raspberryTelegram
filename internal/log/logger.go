@@ -1,4 +1,4 @@
-package domain
+package log
 
 //go:generate moq -out loggerMock.go . Logger
 type Logger interface {

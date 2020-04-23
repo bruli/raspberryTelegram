@@ -1,3 +1,4 @@
 /cmd/telegram/telegram
 /telegram.conf
 .idea
+/coverage.out

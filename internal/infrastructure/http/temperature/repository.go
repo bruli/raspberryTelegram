@@ -2,7 +2,7 @@ package temperature
 
 import (
 	"fmt"
-	"github.com/bruli/rasberryTelegram/internal/domain"
+	temperature2 "github.com/bruli/rasberryTelegram/internal/temperature"
 	"github.com/json-iterator/go"
 	"io/ioutil"
 	"net/http"
@@ -22,10 +22,10 @@ func NewRepository(serverUrl string) *Repository {
 	return &Repository{serverUrl: serverUrl}
 }
 
-func (r *Repository) Get() (domain.Temperature, error) {
+func (r *Repository) Get() (temperature2.Temperature, error) {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/temperature", r.serverUrl), nil)
 	if err != nil {
-		return domain.Temperature{}, err
+		return temperature2.Temperature{}, err
 	}
 	req.Header.Add("Content-Type", "application/json")
 
@@ -33,7 +33,7 @@ func (r *Repository) Get() (domain.Temperature, error) {
 	cl.Timeout = 5 * time.Second
 	res, err := cl.Do(req)
 	if err != nil {
-		return domain.Temperature{}, fmt.Errorf("error getting temperature from water system: %w", err)
+		return temperature2.Temperature{}, fmt.Errorf("error getting temperature from water system: %w", err)
 	}
 
 	body, _ := ioutil.ReadAll(res.Body)
@@ -41,10 +41,10 @@ func (r *Repository) Get() (domain.Temperature, error) {
 	data := temperature{}
 	err = jsoniter.Unmarshal(body, &data)
 	if err != nil {
-		return domain.Temperature{}, fmt.Errorf("error reading temperature response body: %w", err)
+		return temperature2.Temperature{}, fmt.Errorf("error reading temperature response body: %w", err)
 	}
 
-	temp := domain.NewTemperature(data.Humidity, data.Temperature)
+	temp := temperature2.NewTemperature(data.Humidity, data.Temperature)
 
 	return *temp, err
 }
