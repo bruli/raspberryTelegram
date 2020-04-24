@@ -1,4 +1,4 @@
-package temperature
+package http_temperature
 
 import (
 	"fmt"

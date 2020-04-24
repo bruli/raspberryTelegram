@@ -2,7 +2,7 @@ package telegram_bot
 
 import (
 	"fmt"
-	"github.com/bruli/rasberryTelegram/internal/infrastructure/http/temperature"
+	http_temperature "github.com/bruli/rasberryTelegram/internal/infrastructure/http/temperature"
 	"github.com/bruli/rasberryTelegram/internal/infrastructure/log/logger"
 	temperature2 "github.com/bruli/rasberryTelegram/internal/temperature"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -32,7 +32,7 @@ func NewServer(config *Config) *Server {
 	logger := logger.NewLogError()
 	return &Server{config: config,
 		mess: messages{},
-		temp: temperature2.NewHandler(temperature.NewRepository(config.waterSystemUrl), logger)}
+		temp: temperature2.NewHandler(http_temperature.NewRepository(config.waterSystemUrl), logger)}
 }
 
 func (s *Server) Run() error {
@@ -59,7 +59,7 @@ func (s *Server) Run() error {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 			switch update.Message.Command() {
 			case "help":
-				msg.Text = "Type /temp, /status or /water [zone] [seconds]."
+				msg.Text = "Type /temp."
 				s.mess.addMessage(msg)
 			case "temp":
 				tmp, err := s.temp.Handle()
@@ -78,6 +78,8 @@ func (s *Server) Run() error {
 		for _, j := range s.mess {
 			_, _ = bot.Send(j)
 		}
+
+		s.mess = nil
 	}
 	return nil
 }
