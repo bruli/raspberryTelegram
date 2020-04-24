@@ -8,9 +8,11 @@ import (
 	"testing"
 )
 
+const serverUrl = "http://192.168.1.10"
+
 func TestTemperature(t *testing.T) {
-	repo := temperature.NewHandler(http_temperature.NewRepository("http://192.168.1.10"), logger.NewLogger())
-	temp, err := repo.Handle()
+	handler := temperature.NewHandler(http_temperature.NewRepository(serverUrl), logger.NewLogger())
+	temp, err := handler.Handle()
 
 	assert.NoError(t, err)
 	assert.NotNil(t, temp)
