@@ -1,11 +1,19 @@
 package logger
 
-import (
-	log2 "github.com/bruli/rasberryTelegram/internal/log"
-	"log"
-	"os"
-)
+import "github.com/sirupsen/logrus"
 
-func NewLogError() log2.Logger {
-	return log.New(os.Stdout, "ERROR", 1)
+type Logger struct {
+	logger *logrus.Logger
+}
+
+func (l Logger) Fatal(v ...interface{}) {
+	l.logger.Warn(v)
+}
+
+func (l Logger) Fatalf(format string, v ...interface{}) {
+	l.logger.Warnf(format, v)
+}
+
+func NewLogger() *Logger {
+	return &Logger{logger: logrus.New()}
 }

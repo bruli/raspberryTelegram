@@ -11,12 +11,12 @@ import (
 
 func TestNewTemperatureHandler(t *testing.T) {
 	tests := map[string]struct {
-		temp                temperature.Temperature
+		temp                *temperature.Temperature
 		error, formattedErr error
 	}{
-		"it should return error when repository returns error": {temp: temperature.Temperature{}, error: errors.New("error"),
+		"it should return error when repository returns error": {error: errors.New("error"),
 			formattedErr: fmt.Errorf("error getting temperature: %w", errors.New("error"))},
-		"it should return temperature": {temp: *temperature.NewTemperature(40, 20)},
+		"it should return temperature": {temp: temperature.NewTemperature(40, 20)},
 	}
 
 	for name, tt := range tests {
@@ -26,7 +26,10 @@ func TestNewTemperatureHandler(t *testing.T) {
 			handler := temperature.NewHandler(&repo, &logger)
 
 			repo.GetFunc = func() (temperature.Temperature, error) {
-				return tt.temp, tt.error
+				if tt.temp == nil {
+					return temperature.Temperature{}, tt.error
+				}
+				return *tt.temp, tt.error
 			}
 
 			logger.FatalfFunc = func(format string, v ...interface{}) {
