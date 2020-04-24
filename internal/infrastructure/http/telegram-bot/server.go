@@ -5,10 +5,12 @@ import (
 	http_log "github.com/bruli/rasberryTelegram/internal/infrastructure/http/log"
 	http_status "github.com/bruli/rasberryTelegram/internal/infrastructure/http/status"
 	http_temperature "github.com/bruli/rasberryTelegram/internal/infrastructure/http/temperature"
+	http_water "github.com/bruli/rasberryTelegram/internal/infrastructure/http/water"
 	"github.com/bruli/rasberryTelegram/internal/infrastructure/log/logger"
 	"github.com/bruli/rasberryTelegram/internal/log"
 	"github.com/bruli/rasberryTelegram/internal/status"
 	temperature2 "github.com/bruli/rasberryTelegram/internal/temperature"
+	"github.com/bruli/rasberryTelegram/internal/water"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 	"strings"
@@ -34,6 +36,7 @@ type Server struct {
 	temp   *temperature2.Handler
 	status *status.Handler
 	logs   *log.Handler
+	water  *water.Handler
 }
 
 func NewServer(config *Config) *Server {
@@ -42,7 +45,8 @@ func NewServer(config *Config) *Server {
 		mess:   messages{},
 		temp:   temperature2.NewHandler(http_temperature.NewRepository(config.waterSystemUrl), logger),
 		status: status.NewHandler(http_status.NewRepository(config.waterSystemUrl), logger),
-		logs:   log.NewHandler(http_log.NewRepository(config.waterSystemUrl), logger)}
+		logs:   log.NewHandler(http_log.NewRepository(config.waterSystemUrl), logger),
+		water:  water.NewHandler(http_water.NewRepository(config.waterSystemUrl), logger)}
 }
 
 func (s *Server) Run() error {
@@ -69,7 +73,7 @@ func (s *Server) Run() error {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 			switch update.Message.Command() {
 			case "help":
-				msg.Text = "Type /temp /status /log [limit]."
+				msg.Text = "Type /temp /status /log [limit] /water [zone] [seconds]."
 				s.mess.addMessage(msg)
 			case "temp":
 				tmp, err := s.temp.Handle()
@@ -127,7 +131,21 @@ func (s *Server) Run() error {
 							msg.Text = j
 							s.mess.addMessage(msg)
 						}
+					}
+				}
+			case "water":
+				arg := update.Message.CommandArguments()
+				args := strings.Fields(arg)
+				if 2 != len(args) {
+					msg.Text = "Invalid arguments. Required [zone][seconds]"
+					s.mess.addMessage(msg)
+				} else {
+					seconds, _ := strconv.ParseUint(args[1], 10, 8)
+					zone := args[0]
 
+					if err := s.water.Handle(zone, uint8(seconds)); err != nil {
+						msg.Text = fmt.Sprint("failed to execute water on zone %s: %w", zone, err)
+						s.mess.addMessage(msg)
 					}
 				}
 			}
