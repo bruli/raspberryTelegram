@@ -7,11 +7,11 @@ type Logger struct {
 }
 
 func (l Logger) Fatal(v ...interface{}) {
-	l.logger.Warn(v)
+	l.logger.Warn(v...)
 }
 
 func (l Logger) Fatalf(format string, v ...interface{}) {
-	l.logger.Warnf(format, v)
+	l.logger.Warnf(format, v...)
 }
 
 func NewLogger() *Logger {

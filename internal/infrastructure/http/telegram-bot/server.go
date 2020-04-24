@@ -2,12 +2,16 @@ package telegram_bot
 
 import (
 	"fmt"
+	http_log "github.com/bruli/rasberryTelegram/internal/infrastructure/http/log"
 	http_status "github.com/bruli/rasberryTelegram/internal/infrastructure/http/status"
 	http_temperature "github.com/bruli/rasberryTelegram/internal/infrastructure/http/temperature"
 	"github.com/bruli/rasberryTelegram/internal/infrastructure/log/logger"
+	"github.com/bruli/rasberryTelegram/internal/log"
 	"github.com/bruli/rasberryTelegram/internal/status"
 	temperature2 "github.com/bruli/rasberryTelegram/internal/temperature"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"strconv"
+	"strings"
 )
 
 type Config struct {
@@ -29,6 +33,7 @@ type Server struct {
 	mess   messages
 	temp   *temperature2.Handler
 	status *status.Handler
+	logs   *log.Handler
 }
 
 func NewServer(config *Config) *Server {
@@ -36,7 +41,8 @@ func NewServer(config *Config) *Server {
 	return &Server{config: config,
 		mess:   messages{},
 		temp:   temperature2.NewHandler(http_temperature.NewRepository(config.waterSystemUrl), logger),
-		status: status.NewHandler(http_status.NewRepository(config.waterSystemUrl), logger)}
+		status: status.NewHandler(http_status.NewRepository(config.waterSystemUrl), logger),
+		logs:   log.NewHandler(http_log.NewRepository(config.waterSystemUrl), logger)}
 }
 
 func (s *Server) Run() error {
@@ -63,7 +69,7 @@ func (s *Server) Run() error {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 			switch update.Message.Command() {
 			case "help":
-				msg.Text = "Type /temp."
+				msg.Text = "Type /temp /status /log [limit]."
 				s.mess.addMessage(msg)
 			case "temp":
 				tmp, err := s.temp.Handle()
@@ -98,6 +104,31 @@ func (s *Server) Run() error {
 					s.mess.addMessage(msg)
 					msg.Text = fmt.Sprintf("Is raining %v, raining value %v", st.Rain.IsRaining, st.Rain.Value)
 					s.mess.addMessage(msg)
+				}
+			case "log":
+				ar := update.Message.CommandArguments()
+				args := strings.Fields(ar)
+				var limit uint16
+				if 0 == len(args) {
+					limit = 2
+				} else {
+					a, err := strconv.ParseUint(args[0], 10, 8)
+					if err != nil {
+						msg.Text = fmt.Sprintf("invalid limit: %s", err.Error())
+						s.mess.addMessage(msg)
+					} else {
+						limit = uint16(a)
+						logs, err := s.logs.Handle(limit)
+						if err != nil {
+							msg.Text = fmt.Sprintf("Error: %s", err.Error())
+							s.mess.addMessage(msg)
+						}
+						for _, j := range logs {
+							msg.Text = j
+							s.mess.addMessage(msg)
+						}
+
+					}
 				}
 			}
 		}

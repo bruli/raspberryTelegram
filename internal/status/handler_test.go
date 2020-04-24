@@ -3,7 +3,7 @@ package status_test
 import (
 	"errors"
 	"fmt"
-	"github.com/bruli/rasberryTelegram/internal/log"
+	"github.com/bruli/rasberryTelegram/internal/logger"
 	"github.com/bruli/rasberryTelegram/internal/status"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -25,13 +25,13 @@ func TestNewHandler(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			repo := status.RepositoryMock{}
-			logger := log.LoggerMock{}
-			handler := status.NewHandler(&repo, &logger)
+			logg := logger.LoggerMock{}
+			handler := status.NewHandler(&repo, &logg)
 
 			repo.GetFunc = func() (*status.Status, error) {
 				return tt.status, tt.err
 			}
-			logger.FatalFunc = func(v ...interface{}) {
+			logg.FatalFunc = func(v ...interface{}) {
 
 			}
 

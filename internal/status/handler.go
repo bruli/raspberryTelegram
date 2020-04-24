@@ -1,7 +1,7 @@
 package status
 
 import (
-	"github.com/bruli/rasberryTelegram/internal/log"
+	"github.com/bruli/rasberryTelegram/internal/logger"
 	"time"
 )
 
@@ -32,10 +32,10 @@ func NewStatus(systemStarted time.Time, temperature float32, humidity float32, o
 
 type Handler struct {
 	repository Repository
-	logger     log.Logger
+	logger     logger.Logger
 }
 
-func NewHandler(repository Repository, logger log.Logger) *Handler {
+func NewHandler(repository Repository, logger logger.Logger) *Handler {
 	return &Handler{repository: repository, logger: logger}
 }
 

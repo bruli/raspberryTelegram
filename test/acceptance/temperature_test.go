@@ -9,7 +9,7 @@ import (
 )
 
 func TestTemperature(t *testing.T) {
-	repo := temperature.NewHandler(http_temperature.NewRepository("http://192.168.1.10"), logger.NewLogError())
+	repo := temperature.NewHandler(http_temperature.NewRepository("http://192.168.1.10"), logger.NewLogger())
 	temp, err := repo.Handle()
 
 	assert.NoError(t, err)

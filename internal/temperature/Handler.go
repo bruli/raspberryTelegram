@@ -2,15 +2,15 @@ package temperature
 
 import (
 	"fmt"
-	"github.com/bruli/rasberryTelegram/internal/log"
+	"github.com/bruli/rasberryTelegram/internal/logger"
 )
 
 type Handler struct {
 	repo   Repository
-	logger log.Logger
+	logger logger.Logger
 }
 
-func NewHandler(repo Repository, logger log.Logger) *Handler {
+func NewHandler(repo Repository, logger logger.Logger) *Handler {
 	return &Handler{repo: repo, logger: logger}
 }
 

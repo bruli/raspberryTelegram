@@ -11,3 +11,7 @@ build:
 deploy:
 	@make build
 	cd cmd/telegram && scp telegram waterSystem:
+
+coverage:
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
