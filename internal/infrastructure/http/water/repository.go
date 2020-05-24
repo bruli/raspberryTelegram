@@ -8,14 +8,12 @@ import (
 )
 
 type body struct {
-	Seconds uint8    `json:"seconds"`
-	Zones   []string `json:"zones"`
+	Seconds uint8  `json:"seconds"`
+	Zones   string `json:"zone"`
 }
 
 func newBody(seconds uint8, zone string) body {
-	var zones []string
-	zones = append(zones, zone)
-	return body{Seconds: seconds, Zones: zones}
+	return body{Seconds: seconds, Zones: zone}
 }
 
 type Repository struct {

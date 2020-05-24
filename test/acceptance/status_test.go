@@ -11,8 +11,8 @@ import (
 func TestStatus(t *testing.T) {
 	authToken, err := getAuthToken()
 	assert.NoError(t, err)
-	handler := status.NewGetter(http_status.NewRepository(serverUrl, authToken), logger.NewLogger())
-	st, err := handler.Get()
+	getter := status.NewGetter(http_status.NewRepository(serverUrl, authToken), logger.NewLogger())
+	st, err := getter.Get()
 
 	assert.Nil(t, err)
 	assert.NotNil(t, st)
