@@ -9,8 +9,10 @@ import (
 )
 
 func TestStatus(t *testing.T) {
-	handler := status.NewHandler(http_status.NewRepository(serverUrl), logger.NewLogger())
-	st, err := handler.Handle()
+	authToken, err := getAuthToken()
+	assert.NoError(t, err)
+	handler := status.NewGetter(http_status.NewRepository(serverUrl, authToken), logger.NewLogger())
+	st, err := handler.Get()
 
 	assert.Nil(t, err)
 	assert.NotNil(t, st)

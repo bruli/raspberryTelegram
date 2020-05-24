@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func TestNewHandler(t *testing.T) {
+func TestNewGetter(t *testing.T) {
 	tests := map[string]struct {
 		status *status.Status
 		err    error
@@ -26,7 +26,7 @@ func TestNewHandler(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			repo := status.RepositoryMock{}
 			logg := logger.LoggerMock{}
-			handler := status.NewHandler(&repo, &logg)
+			getter := status.NewGetter(&repo, &logg)
 
 			repo.GetFunc = func() (*status.Status, error) {
 				return tt.status, tt.err
@@ -35,7 +35,7 @@ func TestNewHandler(t *testing.T) {
 
 			}
 
-			st, err := handler.Handle()
+			st, err := getter.Get()
 
 			assert.Equal(t, tt.status, st)
 			assert.Equal(t, tt.err, err)

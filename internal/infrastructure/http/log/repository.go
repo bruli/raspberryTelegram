@@ -17,16 +17,17 @@ type logData struct {
 type logs []*logData
 
 type Repository struct {
-	serverUrl string
+	serverURL, authToken string
 }
 
-func NewRepository(serverUrl string) *Repository {
-	return &Repository{serverUrl: serverUrl}
+func NewRepository(serverUrl, authToken string) *Repository {
+	return &Repository{serverURL: serverUrl, authToken: authToken}
 }
 
 func (r *Repository) Get() (log.Logs, error) {
-	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/log", r.serverUrl), nil)
+	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/executions/logs", r.serverURL), nil)
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", r.authToken)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {

@@ -17,7 +17,7 @@ import (
 )
 
 type Config struct {
-	token, waterSystemUrl string
+	token, waterSystemUrl, authToken string
 }
 
 type messages []tgbotapi.MessageConfig
@@ -26,27 +26,30 @@ func (m *messages) addMessage(msg tgbotapi.MessageConfig) {
 	*m = append(*m, msg)
 }
 
-func NewConfig(token, waterSystemUrl string) *Config {
-	return &Config{token: token, waterSystemUrl: waterSystemUrl}
+func NewConfig(token, waterSystemUrl, authToken string) *Config {
+	return &Config{
+		token:          token,
+		waterSystemUrl: waterSystemUrl,
+		authToken:      authToken}
 }
 
 type Server struct {
 	config *Config
 	mess   messages
-	temp   *temperature2.Handler
-	status *status.Handler
-	logs   *log.Handler
-	water  *water.Handler
+	temp   *temperature2.Getter
+	status *status.Getter
+	logs   *log.Getter
+	water  *water.Getter
 }
 
 func NewServer(config *Config) *Server {
 	logger := logger.NewLogger()
 	return &Server{config: config,
 		mess:   messages{},
-		temp:   temperature2.NewHandler(http_temperature.NewRepository(config.waterSystemUrl), logger),
-		status: status.NewHandler(http_status.NewRepository(config.waterSystemUrl), logger),
-		logs:   log.NewHandler(http_log.NewRepository(config.waterSystemUrl), logger),
-		water:  water.NewHandler(http_water.NewRepository(config.waterSystemUrl), logger)}
+		temp:   temperature2.NewGetter(http_temperature.NewRepository(config.waterSystemUrl, config.authToken), logger),
+		status: status.NewGetter(http_status.NewRepository(config.waterSystemUrl, config.authToken), logger),
+		logs:   log.NewGetter(http_log.NewRepository(config.waterSystemUrl, config.authToken), logger),
+		water:  water.NewGetter(http_water.NewRepository(config.waterSystemUrl, config.authToken), logger)}
 }
 
 func (s *Server) Run() error {
@@ -76,7 +79,7 @@ func (s *Server) Run() error {
 				msg.Text = "Type /temp /status /log [limit] /water [zone] [seconds]."
 				s.mess.addMessage(msg)
 			case "temp":
-				tmp, err := s.temp.Handle()
+				tmp, err := s.temp.Get()
 				if err != nil {
 					msg.Text = err.Error()
 					s.mess.addMessage(msg)
@@ -87,7 +90,7 @@ func (s *Server) Run() error {
 					s.mess.addMessage(msg)
 				}
 			case "status":
-				st, err := s.status.Handle()
+				st, err := s.status.Get()
 				if err != nil {
 					msg.Text = err.Error()
 					s.mess.addMessage(msg)
@@ -122,7 +125,7 @@ func (s *Server) Run() error {
 						s.mess.addMessage(msg)
 					} else {
 						limit = uint16(a)
-						logs, err := s.logs.Handle(limit)
+						logs, err := s.logs.Get(limit)
 						if err != nil {
 							msg.Text = fmt.Sprintf("Error: %s", err.Error())
 							s.mess.addMessage(msg)
@@ -143,8 +146,8 @@ func (s *Server) Run() error {
 					seconds, _ := strconv.ParseUint(args[1], 10, 8)
 					zone := args[0]
 
-					if err := s.water.Handle(zone, uint8(seconds)); err != nil {
-						msg.Text = fmt.Sprint("failed to execute water on zone %s: %w", zone, err)
+					if err := s.water.Get(zone, uint8(seconds)); err != nil {
+						msg.Text = fmt.Sprintf("failed to execute water on zone %s: %s", zone, err)
 						s.mess.addMessage(msg)
 					}
 				}

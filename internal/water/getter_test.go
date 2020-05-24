@@ -31,7 +31,7 @@ func TestNewHandler(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			repo := water.RepositoryMock{}
 			logg := logger.LoggerMock{}
-			handler := water.NewHandler(&repo, &logg)
+			handler := water.NewGetter(&repo, &logg)
 
 			repo.ExecuteFunc = func(zone string, seconds uint8) error {
 				return tt.err
@@ -39,7 +39,7 @@ func TestNewHandler(t *testing.T) {
 			logg.FatalfFunc = func(format string, v ...interface{}) {
 			}
 
-			err := handler.Handle(tt.zone, tt.seconds)
+			err := handler.Get(tt.zone, tt.seconds)
 
 			assert.Equal(t, tt.formattedErr, err)
 		})

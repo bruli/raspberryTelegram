@@ -2,3 +2,4 @@
 /telegram.conf
 .idea
 /coverage.out
+/test/acceptance/assets/

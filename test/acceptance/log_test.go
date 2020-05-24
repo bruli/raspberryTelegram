@@ -9,9 +9,11 @@ import (
 )
 
 func TestLog(t *testing.T) {
+	authToken, err := getAuthToken()
+	assert.NoError(t, err)
 	limit := uint16(2)
-	handler := log.NewHandler(http_log.NewRepository(serverUrl), logger.NewLogger())
-	logs, err := handler.Handle(limit)
+	handler := log.NewGetter(http_log.NewRepository(serverUrl, authToken), logger.NewLogger())
+	logs, err := handler.Get(limit)
 
 	assert.Nil(t, err)
 	assert.Equal(t, limit, uint16(len(logs)))

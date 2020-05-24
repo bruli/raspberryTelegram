@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestNewTemperatureHandler(t *testing.T) {
+func TestNewTemperatureGetter(t *testing.T) {
 	tests := map[string]struct {
 		temp                *temperature.Temperature
 		error, formattedErr error
@@ -23,7 +23,7 @@ func TestNewTemperatureHandler(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			repo := temperature.RepositoryMock{}
 			logg := logger.LoggerMock{}
-			handler := temperature.NewHandler(&repo, &logg)
+			getter := temperature.NewGetter(&repo, &logg)
 
 			repo.GetFunc = func() (temperature.Temperature, error) {
 				if tt.temp == nil {
@@ -34,7 +34,7 @@ func TestNewTemperatureHandler(t *testing.T) {
 
 			logg.FatalfFunc = func(format string, v ...interface{}) {
 			}
-			temp, err := handler.Handle()
+			temp, err := getter.Get()
 			assert.Equal(t, tt.temp, temp)
 			assert.Equal(t, tt.formattedErr, err)
 		})

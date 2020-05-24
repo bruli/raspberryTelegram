@@ -19,7 +19,7 @@ func newBody(seconds uint8, zone string) body {
 }
 
 type Repository struct {
-	serverUrl string
+	serverURL, authToken string
 }
 
 func (r *Repository) Execute(zone string, seconds uint8) error {
@@ -29,11 +29,12 @@ func (r *Repository) Execute(zone string, seconds uint8) error {
 		return fmt.Errorf("failed to marshal request body: %w", err)
 	}
 
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/water", r.serverUrl), bytes.NewBuffer(b))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/water", r.serverURL), bytes.NewBuffer(b))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", r.authToken)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -46,6 +47,6 @@ func (r *Repository) Execute(zone string, seconds uint8) error {
 	return nil
 }
 
-func NewRepository(serverUrl string) *Repository {
-	return &Repository{serverUrl: serverUrl}
+func NewRepository(serverURL, authToken string) *Repository {
+	return &Repository{serverURL: serverURL, authToken: authToken}
 }

@@ -30,19 +30,19 @@ func NewStatus(systemStarted time.Time, temperature float32, humidity float32, o
 		Rain:          rain}
 }
 
-type Handler struct {
+type Getter struct {
 	repository Repository
 	logger     logger.Logger
 }
 
-func NewHandler(repository Repository, logger logger.Logger) *Handler {
-	return &Handler{repository: repository, logger: logger}
+func NewGetter(repository Repository, logger logger.Logger) *Getter {
+	return &Getter{repository: repository, logger: logger}
 }
 
-func (h *Handler) Handle() (*Status, error) {
-	st, err := h.repository.Get()
+func (g *Getter) Get() (*Status, error) {
+	st, err := g.repository.Get()
 	if err != nil {
-		h.logger.Fatal(err)
+		g.logger.Fatal(err)
 		return nil, err
 	}
 

@@ -8,8 +8,9 @@ import (
 
 func main() {
 	token := os.Getenv("TELEGRAM_TOKEN")
-	serverUrl := os.Getenv("WATER_SYSTEM_URL")
-	conf := telegram_bot.NewConfig(token, serverUrl)
+	serverURL := os.Getenv("WATER_SYSTEM_URL")
+	authToken := os.Getenv("AUTH_TOKEN")
+	conf := telegram_bot.NewConfig(token, serverURL, authToken)
 	t := telegram_bot.NewServer(conf)
 	if err := t.Run(); err != nil {
 		log.Fatal(err)

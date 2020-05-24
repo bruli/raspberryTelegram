@@ -15,11 +15,11 @@ type temperature struct {
 }
 
 type Repository struct {
-	serverUrl string
+	serverUrl, authToken string
 }
 
-func NewRepository(serverUrl string) *Repository {
-	return &Repository{serverUrl: serverUrl}
+func NewRepository(serverUrl, authToken string) *Repository {
+	return &Repository{serverUrl: serverUrl, authToken: authToken}
 }
 
 func (r *Repository) Get() (temperature2.Temperature, error) {
@@ -28,6 +28,7 @@ func (r *Repository) Get() (temperature2.Temperature, error) {
 		return temperature2.Temperature{}, err
 	}
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", r.authToken)
 
 	cl := http.DefaultClient
 	cl.Timeout = 5 * time.Second

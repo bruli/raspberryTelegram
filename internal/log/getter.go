@@ -7,19 +7,19 @@ import (
 
 type Logs []string
 
-type Handler struct {
+type Getter struct {
 	repository Repository
 	logger     logger.Logger
 }
 
-func NewHandler(repository Repository, logger logger.Logger) *Handler {
-	return &Handler{repository: repository, logger: logger}
+func NewGetter(repository Repository, logger logger.Logger) *Getter {
+	return &Getter{repository: repository, logger: logger}
 }
 
-func (h *Handler) Handle(limit uint16) ([]string, error) {
-	l, err := h.repository.Get()
+func (g *Getter) Get(limit uint16) ([]string, error) {
+	l, err := g.repository.Get()
 	if err != nil {
-		h.logger.Fatalf("failed to get logs: %w", err)
+		g.logger.Fatalf("failed to get logs: %w", err)
 		return nil, fmt.Errorf("failed to get logs: %w", err)
 	}
 	max := uint16(len(l))

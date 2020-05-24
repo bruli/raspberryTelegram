@@ -31,7 +31,7 @@ func TestLogHandler(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			repo := log.RepositoryMock{}
 			logg := logger.LoggerMock{}
-			handler := log.NewHandler(&repo, &logg)
+			handler := log.NewGetter(&repo, &logg)
 
 			repo.GetFunc = func() (log.Logs, error) {
 				return tt.logs, tt.err
@@ -39,7 +39,7 @@ func TestLogHandler(t *testing.T) {
 			logg.FatalfFunc = func(format string, v ...interface{}) {
 			}
 
-			l, err := handler.Handle(tt.limit)
+			l, err := handler.Get(tt.limit)
 			assert.Equal(t, tt.formatedErr, err)
 			//assert.Equal(t, tt.messages, l)
 			if tt.messages != nil {
