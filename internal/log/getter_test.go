@@ -11,10 +11,10 @@ import (
 
 func TestLogHandler(t *testing.T) {
 	tests := map[string]struct {
-		limit            uint16
-		err, formatedErr error
-		messages         []string
-		logs             log.Logs
+		limit                  uint16
+		err, formatedErr       error
+		messages, expectedLogs []string
+		logs                   log.Logs
 	}{
 		"it should return error when repository returns error": {
 			limit:       2,
@@ -22,9 +22,10 @@ func TestLogHandler(t *testing.T) {
 			formatedErr: fmt.Errorf("failed to get logs: %w", errors.New("error")),
 		},
 		"it should return limited messages": {
-			limit:    2,
-			messages: []string{"message1", "message2"},
-			logs:     log.Logs{"message1", "message2", "message3"},
+			limit:        2,
+			messages:     []string{"message2", "message3"},
+			logs:         log.Logs{"message3", "message2", "message1"},
+			expectedLogs: []string{"message3", "message2"},
 		},
 	}
 	for name, tt := range tests {
@@ -41,9 +42,9 @@ func TestLogHandler(t *testing.T) {
 
 			l, err := handler.Get(tt.limit)
 			assert.Equal(t, tt.formatedErr, err)
-			//assert.Equal(t, tt.messages, l)
 			if tt.messages != nil {
 				assert.Equal(t, tt.limit, uint16(len(l)))
+				assert.Equal(t, tt.expectedLogs, l)
 			}
 		})
 	}

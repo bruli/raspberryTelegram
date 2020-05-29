@@ -22,11 +22,9 @@ func (g *Getter) Get(limit uint16) ([]string, error) {
 		g.logger.Fatalf("failed to get logs: %w", err)
 		return nil, fmt.Errorf("failed to get logs: %w", err)
 	}
-	max := uint16(len(l))
-	init := max - limit
 
 	var data []string
-	for _, j := range l[init:max] {
+	for _, j := range l[:limit] {
 		data = append(data, j)
 	}
 
