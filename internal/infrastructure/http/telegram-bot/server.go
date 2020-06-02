@@ -3,11 +3,13 @@ package telegram_bot
 import (
 	"fmt"
 	http_log "github.com/bruli/rasberryTelegram/internal/infrastructure/http/log"
+	http_rain "github.com/bruli/rasberryTelegram/internal/infrastructure/http/rain"
 	http_status "github.com/bruli/rasberryTelegram/internal/infrastructure/http/status"
 	http_temperature "github.com/bruli/rasberryTelegram/internal/infrastructure/http/temperature"
 	http_water "github.com/bruli/rasberryTelegram/internal/infrastructure/http/water"
 	"github.com/bruli/rasberryTelegram/internal/infrastructure/log/logger"
 	"github.com/bruli/rasberryTelegram/internal/log"
+	"github.com/bruli/rasberryTelegram/internal/rain"
 	"github.com/bruli/rasberryTelegram/internal/status"
 	temperature2 "github.com/bruli/rasberryTelegram/internal/temperature"
 	"github.com/bruli/rasberryTelegram/internal/water"
@@ -40,6 +42,7 @@ type Server struct {
 	status *status.Getter
 	logs   *log.Getter
 	water  *water.Getter
+	rain   *rain.Getter
 }
 
 func NewServer(config *Config) *Server {
@@ -49,7 +52,9 @@ func NewServer(config *Config) *Server {
 		temp:   temperature2.NewGetter(http_temperature.NewRepository(config.waterSystemUrl, config.authToken), logger),
 		status: status.NewGetter(http_status.NewRepository(config.waterSystemUrl, config.authToken), logger),
 		logs:   log.NewGetter(http_log.NewRepository(config.waterSystemUrl, config.authToken), logger),
-		water:  water.NewGetter(http_water.NewRepository(config.waterSystemUrl, config.authToken), logger)}
+		water:  water.NewGetter(http_water.NewRepository(config.waterSystemUrl, config.authToken), logger),
+		rain:   rain.NewGetter(logger, http_rain.NewRepository(config.waterSystemUrl, config.authToken)),
+	}
 }
 
 func (s *Server) Run() error {
@@ -150,6 +155,15 @@ func (s *Server) Run() error {
 						msg.Text = fmt.Sprintf("failed to execute water on zone %s: %s", zone, err)
 						s.mess.addMessage(msg)
 					}
+				}
+			case "rain":
+				ra, err := s.rain.Get()
+				if err != nil {
+					msg.Text = err.Error()
+					s.mess.addMessage(msg)
+				} else {
+					msg.Text = fmt.Sprintf("is raining: %t, value: %v", ra.IsRain, ra.Value)
+					s.mess.addMessage(msg)
 				}
 			}
 		}
