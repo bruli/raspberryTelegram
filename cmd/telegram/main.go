@@ -1,15 +1,24 @@
 package main
 
 import (
+	"flag"
 	telegram_bot "github.com/bruli/rasberryTelegram/internal/infrastructure/http/telegram-bot"
+	"github.com/spf13/viper"
 	"log"
-	"os"
 )
 
 func main() {
-	token := os.Getenv("TELEGRAM_TOKEN")
-	serverURL := os.Getenv("WATER_SYSTEM_URL")
-	authToken := os.Getenv("AUTH_TOKEN")
+	configFile := flag.String("config", "", "config file")
+	flag.Parse()
+
+	viper.SetConfigFile(*configFile)
+	viper.AutomaticEnv()
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("invalid config file: %s", err)
+	}
+	token := viper.GetString("telegram_token")
+	serverURL := viper.GetString("water_system_url")
+	authToken := viper.GetString("auth_token")
 	conf := telegram_bot.NewConfig(token, serverURL, authToken)
 	t := telegram_bot.NewServer(conf)
 	if err := t.Run(); err != nil {

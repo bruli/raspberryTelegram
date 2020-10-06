@@ -1,0 +1,4 @@
+---
+telegram_token: "{{ telegram_token_vault }}"
+water_system_url: "http://192:168:1.10"
+auth_token: "{{ auth_token_vault }}"
