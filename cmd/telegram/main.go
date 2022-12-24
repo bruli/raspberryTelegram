@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -21,6 +22,7 @@ const (
 	helpCommand    = "help"
 	statusCommand  = "status"
 	weatherCommand = "weather"
+	logCommand     = "log"
 )
 
 func main() {
@@ -37,6 +39,7 @@ func main() {
 
 	statusQh := qhErrMdw(app.NewStatus(wsr))
 	weatherQh := qhErrMdw(app.NewWeather(wsr))
+	logsQh := qhErrMdw(app.NewLogs(wsr))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken())
@@ -74,6 +77,12 @@ func main() {
 				telegram2.Status(ctx, statusQh, chatID, &msgs)
 			case weatherCommand:
 				telegram2.Weather(ctx, weatherQh, chatID, &msgs)
+			case logCommand:
+				number, err := strconv.Atoi(update.Message.CommandArguments())
+				if err != nil {
+					number = 2
+				}
+				telegram2.Logs(ctx, logsQh, chatID, &msgs, number)
 			}
 			for _, j := range msgs.GetMessages() {
 				_, _ = bot.Send(j)

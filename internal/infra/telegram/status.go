@@ -13,7 +13,7 @@ func Status(ctx context.Context, qh cqs.QueryHandler, chatID int64, msgs *Messag
 	msg := tgbotapi.NewMessage(chatID, "")
 	result, err := qh.Handle(ctx, app.StatusQuery{})
 	if err != nil {
-		msg.Text = fmt.Sprintf("failed getting status: %s", err.Error())
+		buildMessage(msgs, msg, fmt.Sprintf("failed getting status: %s", err.Error()))
 		return
 	}
 	st, _ := result.(status.Status)

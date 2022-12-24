@@ -14,7 +14,7 @@ func Weather(ctx context.Context, qh cqs.QueryHandler, chatID int64, msgs *Messa
 	result, err := qh.Handle(ctx, app.WeatherQuery{})
 	if err != nil {
 		if err != nil {
-			msg.Text = fmt.Sprintf("failed getting weather: %s", err.Error())
+			buildMessage(msgs, msg, fmt.Sprintf("failed getting weather: %s", err.Error()))
 			return
 		}
 	}

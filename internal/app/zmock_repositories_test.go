@@ -6,6 +6,7 @@ package app_test
 import (
 	"context"
 	"github.com/bruli/rasberryTelegram/internal/app"
+	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 	"sync"
@@ -140,5 +141,77 @@ func (mock *WeatherRepositoryMock) FindWeatherCalls() []struct {
 	mock.lockFindWeather.RLock()
 	calls = mock.calls.FindWeather
 	mock.lockFindWeather.RUnlock()
+	return calls
+}
+
+// Ensure, that LogsRepositoryMock does implement app.LogsRepository.
+// If this is not the case, regenerate this file with moq.
+var _ app.LogsRepository = &LogsRepositoryMock{}
+
+// LogsRepositoryMock is a mock implementation of app.LogsRepository.
+//
+//	func TestSomethingThatUsesLogsRepository(t *testing.T) {
+//
+//		// make and configure a mocked app.LogsRepository
+//		mockedLogsRepository := &LogsRepositoryMock{
+//			FindLogsFunc: func(ctx context.Context, number int) ([]log.Log, error) {
+//				panic("mock out the FindLogs method")
+//			},
+//		}
+//
+//		// use mockedLogsRepository in code that requires app.LogsRepository
+//		// and then make assertions.
+//
+//	}
+type LogsRepositoryMock struct {
+	// FindLogsFunc mocks the FindLogs method.
+	FindLogsFunc func(ctx context.Context, number int) ([]log.Log, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// FindLogs holds details about calls to the FindLogs method.
+		FindLogs []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Number is the number argument value.
+			Number int
+		}
+	}
+	lockFindLogs sync.RWMutex
+}
+
+// FindLogs calls FindLogsFunc.
+func (mock *LogsRepositoryMock) FindLogs(ctx context.Context, number int) ([]log.Log, error) {
+	if mock.FindLogsFunc == nil {
+		panic("LogsRepositoryMock.FindLogsFunc: method is nil but LogsRepository.FindLogs was just called")
+	}
+	callInfo := struct {
+		Ctx    context.Context
+		Number int
+	}{
+		Ctx:    ctx,
+		Number: number,
+	}
+	mock.lockFindLogs.Lock()
+	mock.calls.FindLogs = append(mock.calls.FindLogs, callInfo)
+	mock.lockFindLogs.Unlock()
+	return mock.FindLogsFunc(ctx, number)
+}
+
+// FindLogsCalls gets all the calls that were made to FindLogs.
+// Check the length with:
+//
+//	len(mockedLogsRepository.FindLogsCalls())
+func (mock *LogsRepositoryMock) FindLogsCalls() []struct {
+	Ctx    context.Context
+	Number int
+} {
+	var calls []struct {
+		Ctx    context.Context
+		Number int
+	}
+	mock.lockFindLogs.RLock()
+	calls = mock.calls.FindLogs
+	mock.lockFindLogs.RUnlock()
 	return calls
 }

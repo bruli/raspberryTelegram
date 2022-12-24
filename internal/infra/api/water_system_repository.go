@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 	"github.com/bruli/raspberryWaterSystem/pkg/ws"
@@ -11,6 +12,24 @@ import (
 
 type WaterSystemRepository struct {
 	api
+}
+
+func (s WaterSystemRepository) FindLogs(ctx context.Context, number int) ([]log.Log, error) {
+	logs, err := s.pkg.GetLogs(ctx, number)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find logs, %w", err)
+	}
+	return buildLogs(logs), nil
+}
+
+func buildLogs(lo []ws.Log) []log.Log {
+	logs := make([]log.Log, len(lo))
+	for i, n := range lo {
+		var l log.Log
+		l.Hydrate(n.ExecutedAt, n.Seconds, n.ZoneName)
+		logs[i] = l
+	}
+	return logs
 }
 
 func (s WaterSystemRepository) FindWeather(ctx context.Context) (weather.Weather, error) {
