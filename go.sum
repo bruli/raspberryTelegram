@@ -1,5 +1,9 @@
 github.com/bruli/raspberryRainSensor v0.0.0-20220828180315-93d6dc296c65 h1:qca46H6/g3StcvuOhD0penarui5hGBCz/o2ctPFvDQk=
 github.com/bruli/raspberryRainSensor v0.0.0-20220828180315-93d6dc296c65/go.mod h1:kVanx5D3kn8v9OTbnYeyuSSjPpVfnobi6xaFTIVQn0E=
+github.com/bruli/raspberryRainSensor v0.0.0-20221224155221-d234e2a3539b h1:gjeY67c7BcVKkMGFBJbFQ2AC6S11FlUBYUbrYVI3Lkw=
+github.com/bruli/raspberryRainSensor v0.0.0-20221224155221-d234e2a3539b/go.mod h1:j/q2s0h7EuuQ8cVQY8IfADVlRjFn2zYeiU+qhzGkvKk=
+github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a h1:75F5cfybtq/5yCthaKdr6Ls4nyhqWAcvnSSV8thqIsA=
+github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a/go.mod h1:j/q2s0h7EuuQ8cVQY8IfADVlRjFn2zYeiU+qhzGkvKk=
 github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f h1:LCtaMCLDu8JgCeA43dVsEeeLq/kY8B+q9LwFDl8wvqo=
 github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f/go.mod h1:LKFXtaCkC/jl9hrpDlc3GnJOHBcg07bhdwApyRnYUX8=
 github.com/coreos/go-systemd/v22 v22.3.3-0.20220203105225-a9a7ef127534/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=

@@ -22,7 +22,7 @@ func (s WaterSystemRepository) FindStatus(ctx context.Context) (status.Status, e
 
 func buildStatusDomain(s ws.Status) status.Status {
 	var st status.Status
-	st.Hydrate(s.Humidity, s.IsRaining, s.SystemStartedAt, s.Temperature, s.UpdatedAt)
+	st.Hydrate(int(s.Humidity), s.IsRaining, s.SystemStartedAt, int(s.Temperature), s.UpdatedAt)
 	return st
 }
 

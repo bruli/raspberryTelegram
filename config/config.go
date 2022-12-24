@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/bruli/raspberryRainSensor/pkg/common/env"
+	"net/url"
 )
 
 const (
@@ -9,12 +10,24 @@ const (
 	ServerURL     = ProjectPrefix + "SERVER_URL"
 	Token         = ProjectPrefix + "TOKEN"
 	AuthToken     = ProjectPrefix + "AUTH_TOKEN"
+	WSServerURl   = ProjectPrefix + "WS_URL"
+	WSServerToken = ProjectPrefix + "WS_TOKEN"
 )
 
 type Config struct {
 	serverUrl,
 	telegramToken,
-	authToken string
+	authToken,
+	wsServerToken string
+	wsServerURL url.URL
+}
+
+func (c Config) WsServerURL() url.URL {
+	return c.wsServerURL
+}
+
+func (c Config) WsServerToken() string {
+	return c.wsServerToken
 }
 
 func (c Config) ServerUrl() string {
@@ -30,7 +43,7 @@ func (c Config) AuthToken() string {
 }
 
 func NewConfig() (Config, error) {
-	url, err := env.Value(ServerURL)
+	serverURL, err := env.Value(ServerURL)
 	if err != nil {
 		return Config{}, err
 	}
@@ -42,9 +55,20 @@ func NewConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	wsserver, err := env.Value(WSServerURl)
+	if err != nil {
+		return Config{}, err
+	}
+	wsServerURL, err := url.Parse(wsserver)
+	if err != nil {
+		return Config{}, err
+	}
+	wsToken, err := env.Value(WSServerToken)
 	return Config{
-		serverUrl:     url,
+		serverUrl:     serverURL,
 		telegramToken: token,
 		authToken:     auth,
+		wsServerURL:   *wsServerURL,
+		wsServerToken: wsToken,
 	}, nil
 }

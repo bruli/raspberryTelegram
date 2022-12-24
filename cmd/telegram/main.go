@@ -4,16 +4,22 @@ import (
 	"context"
 	"fmt"
 	"github.com/bruli/rasberryTelegram/config"
+	"github.com/bruli/rasberryTelegram/internal/app"
+	"github.com/bruli/rasberryTelegram/internal/infra/api"
 	telegram2 "github.com/bruli/rasberryTelegram/internal/infra/telegram"
+	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/rs/zerolog"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 const (
-	helpCommand = "help"
+	helpCommand   = "help"
+	statusCommand = "status"
 )
 
 func main() {
@@ -23,6 +29,13 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed reading config")
 	}
+	client := http.Client{Timeout: 5 * time.Second}
+	sr := api.NewWaterSystemRepository(conf.WsServerURL(), &client, conf.WsServerToken())
+
+	qhErrMdw := cqs.NewQueryHndErrorMiddleware(&log)
+
+	statusQh := qhErrMdw(app.NewStatus(sr))
+
 	ctx, cancel := context.WithCancel(context.Background())
 	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken())
 	if err != nil {
@@ -50,10 +63,13 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
+		chatID := update.Message.Chat.ID
 		if update.Message.IsCommand() {
 			switch update.Message.Command() {
 			case helpCommand:
-				telegram2.Help(ctx, update.Message.Chat.ID, &msgs)
+				telegram2.Help(ctx, chatID, &msgs)
+			case statusCommand:
+				telegram2.Status(ctx, statusQh, chatID, &msgs)
 			}
 			for _, j := range msgs.GetMessages() {
 				_, _ = bot.Send(j)

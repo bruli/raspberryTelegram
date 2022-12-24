@@ -3,7 +3,7 @@ module github.com/bruli/rasberryTelegram
 go 1.19
 
 require (
-	github.com/bruli/raspberryRainSensor v0.0.0-20220828180315-93d6dc296c65
+	github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/rs/zerolog v1.28.0
 	github.com/stretchr/testify v1.7.1
