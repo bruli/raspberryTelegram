@@ -7,6 +7,7 @@ import (
 	"context"
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
+	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 	"sync"
 )
 
@@ -73,5 +74,71 @@ func (mock *StatusRepositoryMock) FindStatusCalls() []struct {
 	mock.lockFindStatus.RLock()
 	calls = mock.calls.FindStatus
 	mock.lockFindStatus.RUnlock()
+	return calls
+}
+
+// Ensure, that WeatherRepositoryMock does implement app.WeatherRepository.
+// If this is not the case, regenerate this file with moq.
+var _ app.WeatherRepository = &WeatherRepositoryMock{}
+
+// WeatherRepositoryMock is a mock implementation of app.WeatherRepository.
+//
+//	func TestSomethingThatUsesWeatherRepository(t *testing.T) {
+//
+//		// make and configure a mocked app.WeatherRepository
+//		mockedWeatherRepository := &WeatherRepositoryMock{
+//			FindWeatherFunc: func(ctx context.Context) (weather.Weather, error) {
+//				panic("mock out the FindWeather method")
+//			},
+//		}
+//
+//		// use mockedWeatherRepository in code that requires app.WeatherRepository
+//		// and then make assertions.
+//
+//	}
+type WeatherRepositoryMock struct {
+	// FindWeatherFunc mocks the FindWeather method.
+	FindWeatherFunc func(ctx context.Context) (weather.Weather, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// FindWeather holds details about calls to the FindWeather method.
+		FindWeather []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+		}
+	}
+	lockFindWeather sync.RWMutex
+}
+
+// FindWeather calls FindWeatherFunc.
+func (mock *WeatherRepositoryMock) FindWeather(ctx context.Context) (weather.Weather, error) {
+	if mock.FindWeatherFunc == nil {
+		panic("WeatherRepositoryMock.FindWeatherFunc: method is nil but WeatherRepository.FindWeather was just called")
+	}
+	callInfo := struct {
+		Ctx context.Context
+	}{
+		Ctx: ctx,
+	}
+	mock.lockFindWeather.Lock()
+	mock.calls.FindWeather = append(mock.calls.FindWeather, callInfo)
+	mock.lockFindWeather.Unlock()
+	return mock.FindWeatherFunc(ctx)
+}
+
+// FindWeatherCalls gets all the calls that were made to FindWeather.
+// Check the length with:
+//
+//	len(mockedWeatherRepository.FindWeatherCalls())
+func (mock *WeatherRepositoryMock) FindWeatherCalls() []struct {
+	Ctx context.Context
+} {
+	var calls []struct {
+		Ctx context.Context
+	}
+	mock.lockFindWeather.RLock()
+	calls = mock.calls.FindWeather
+	mock.lockFindWeather.RUnlock()
 	return calls
 }

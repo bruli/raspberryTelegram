@@ -18,8 +18,9 @@ import (
 )
 
 const (
-	helpCommand   = "help"
-	statusCommand = "status"
+	helpCommand    = "help"
+	statusCommand  = "status"
+	weatherCommand = "weather"
 )
 
 func main() {
@@ -30,11 +31,12 @@ func main() {
 		log.Fatal().Err(err).Msg("failed reading config")
 	}
 	client := http.Client{Timeout: 5 * time.Second}
-	sr := api.NewWaterSystemRepository(conf.WsServerURL(), &client, conf.WsServerToken())
+	wsr := api.NewWaterSystemRepository(conf.WsServerURL(), &client, conf.WsServerToken())
 
 	qhErrMdw := cqs.NewQueryHndErrorMiddleware(&log)
 
-	statusQh := qhErrMdw(app.NewStatus(sr))
+	statusQh := qhErrMdw(app.NewStatus(wsr))
+	weatherQh := qhErrMdw(app.NewWeather(wsr))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken())
@@ -70,6 +72,8 @@ func main() {
 				telegram2.Help(ctx, chatID, &msgs)
 			case statusCommand:
 				telegram2.Status(ctx, statusQh, chatID, &msgs)
+			case weatherCommand:
+				telegram2.Weather(ctx, weatherQh, chatID, &msgs)
 			}
 			for _, j := range msgs.GetMessages() {
 				_, _ = bot.Send(j)
