@@ -1,8 +1,0 @@
-/cmd/telegram/telegram
-/deploy/config/telegram.conf
-.idea
-/coverage.out
-/test/acceptance/assets/
-/deploy/password
-/config.yaml
-/deploy/assets/

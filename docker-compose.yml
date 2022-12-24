@@ -1,0 +1,21 @@
+version: "3.3"
+
+services:
+  telegram:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: telegram
+    networks:
+      - water-system
+    volumes:
+      - .:/app
+    environment:
+      TELEGRAM_SERVER_URL: ${TELEGRAM_SERVER_URL:-:8080}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-:token}
+      TELEGRAM_AUTH_TOKEN: ${TELEGRAM_AUTH_TOKEN:-:auth}
+    ports:
+      - "8085:8080"
+networks:
+  water-system:
+    external: true

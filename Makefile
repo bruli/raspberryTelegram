@@ -1,11 +1,5 @@
 tests:
-	go test ./...
-
-acceptance:
-	bash -c "cd test/acceptance && go test -v"
-
-unit:
-	@bash -c "cd internal && GOTEST_PALETTE="red,blue" gotest ./..."
+	go test -race ./...
 
 build:
 	CC=arm-linux-gnueabi-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm GOARM=6 go build -o deploy/assets/telegram cmd/telegram/main.go
@@ -25,3 +19,7 @@ decryptVault:
 
 deploys:
 	ansible-playbook -i deploy/inventories/production/hosts deploy/deploy.yml --vault-id raspberry_telegram@deploy/password
+
+lint:
+	golangci-lint run
+	go mod tidy -v && git --no-pager diff --quiet go.mod go.sum
