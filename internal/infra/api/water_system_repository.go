@@ -3,11 +3,12 @@ package api
 import (
 	"context"
 	"fmt"
+	"net/url"
+
 	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 	"github.com/bruli/raspberryWaterSystem/pkg/ws"
-	"net/url"
 )
 
 type WaterSystemRepository struct {

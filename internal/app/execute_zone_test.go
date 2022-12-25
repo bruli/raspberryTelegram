@@ -3,9 +3,10 @@ package app_test
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestExecuteZoneHandle(t *testing.T) {

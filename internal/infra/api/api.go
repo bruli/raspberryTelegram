@@ -1,8 +1,9 @@
 package api
 
 import (
-	"github.com/bruli/raspberryWaterSystem/pkg/ws"
 	"net/url"
+
+	"github.com/bruli/raspberryWaterSystem/pkg/ws"
 )
 
 type api struct {

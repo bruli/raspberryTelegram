@@ -3,6 +3,7 @@ package telegram
 import (
 	"context"
 	"fmt"
+
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"

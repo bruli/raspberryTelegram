@@ -3,11 +3,12 @@ package app_test
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
 	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestStatusHandle(t *testing.T) {

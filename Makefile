@@ -1,4 +1,4 @@
-tests:
+test:
 	go test -race ./...
 
 build:

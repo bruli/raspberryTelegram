@@ -11,13 +11,9 @@ services:
     volumes:
       - .:/app
     environment:
-      TELEGRAM_SERVER_URL: ${TELEGRAM_SERVER_URL:-:8080}
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-:token}
-      TELEGRAM_AUTH_TOKEN: ${TELEGRAM_AUTH_TOKEN:-:auth}
       TELEGRAM_WS_URL: ${TELEGRAM_WS_URL:-http://water_system:8080}
       TELEGRAM_WS_TOKEN: ${TELEGRAM_WS_TOKEN:-WT7*P6Yn^2-Y*V*C-h&K6*b!@=HCzhd+}
-    ports:
-      - "8085:8080"
 networks:
   water-system:
     external: true

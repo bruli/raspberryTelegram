@@ -3,13 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/bruli/rasberryTelegram/config"
-	"github.com/bruli/rasberryTelegram/internal/app"
-	"github.com/bruli/rasberryTelegram/internal/infra/api"
-	telegram2 "github.com/bruli/rasberryTelegram/internal/infra/telegram"
-	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/rs/zerolog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -17,6 +10,14 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/bruli/rasberryTelegram/config"
+	"github.com/bruli/rasberryTelegram/internal/app"
+	"github.com/bruli/rasberryTelegram/internal/infra/api"
+	telegram2 "github.com/bruli/rasberryTelegram/internal/infra/telegram"
+	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/rs/zerolog"
 )
 
 const (

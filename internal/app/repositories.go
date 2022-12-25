@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+
 	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"

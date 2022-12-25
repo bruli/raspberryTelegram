@@ -3,10 +3,11 @@ package app_test
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestLogsHandle(t *testing.T) {
