@@ -7,7 +7,7 @@ import (
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
 )
 
-//go:generate moq -out zmock_repositories_test.go -pkg app_test . StatusRepository WeatherRepository LogsRepository
+//go:generate moq -out zmock_repositories_test.go -pkg app_test . StatusRepository WeatherRepository LogsRepository ExecutionRepository //nolint
 
 type StatusRepository interface {
 	FindStatus(ctx context.Context) (status.Status, error)
@@ -19,4 +19,8 @@ type WeatherRepository interface {
 
 type LogsRepository interface {
 	FindLogs(ctx context.Context, number int) ([]log.Log, error)
+}
+
+type ExecutionRepository interface {
+	ExecuteZone(ctx context.Context, zone string, seconds int) error
 }

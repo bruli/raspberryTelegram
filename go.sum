@@ -1,13 +1,8 @@
-github.com/bruli/raspberryRainSensor v0.0.0-20220828180315-93d6dc296c65 h1:qca46H6/g3StcvuOhD0penarui5hGBCz/o2ctPFvDQk=
-github.com/bruli/raspberryRainSensor v0.0.0-20220828180315-93d6dc296c65/go.mod h1:kVanx5D3kn8v9OTbnYeyuSSjPpVfnobi6xaFTIVQn0E=
-github.com/bruli/raspberryRainSensor v0.0.0-20221224155221-d234e2a3539b h1:gjeY67c7BcVKkMGFBJbFQ2AC6S11FlUBYUbrYVI3Lkw=
-github.com/bruli/raspberryRainSensor v0.0.0-20221224155221-d234e2a3539b/go.mod h1:j/q2s0h7EuuQ8cVQY8IfADVlRjFn2zYeiU+qhzGkvKk=
 github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a h1:75F5cfybtq/5yCthaKdr6Ls4nyhqWAcvnSSV8thqIsA=
 github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a/go.mod h1:j/q2s0h7EuuQ8cVQY8IfADVlRjFn2zYeiU+qhzGkvKk=
 github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f h1:LCtaMCLDu8JgCeA43dVsEeeLq/kY8B+q9LwFDl8wvqo=
 github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f/go.mod h1:LKFXtaCkC/jl9hrpDlc3GnJOHBcg07bhdwApyRnYUX8=
 github.com/coreos/go-systemd/v22 v22.3.3-0.20220203105225-a9a7ef127534/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
-github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -38,6 +33,7 @@ github.com/technoweenie/multipartstreamer v1.0.1/go.mod h1:jNVxdtShOxzAsukZwTSw6
 golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 h1:foEbQz/B0Oz6YIqu/69kfXPYeFQAuuMYFkjaqXzl5Wo=
 golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=

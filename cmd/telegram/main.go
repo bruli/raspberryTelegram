@@ -14,15 +14,17 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
 
 const (
-	helpCommand    = "help"
-	statusCommand  = "status"
-	weatherCommand = "weather"
-	logCommand     = "log"
+	helpCommand      = "help"
+	statusCommand    = "status"
+	weatherCommand   = "weather"
+	logCommand       = "log"
+	executionCommand = "water"
 )
 
 func main() {
@@ -36,10 +38,13 @@ func main() {
 	wsr := api.NewWaterSystemRepository(conf.WsServerURL(), &client, conf.WsServerToken())
 
 	qhErrMdw := cqs.NewQueryHndErrorMiddleware(&log)
+	chErrMdw := cqs.NewCommandHndErrorMiddleware(&log)
 
 	statusQh := qhErrMdw(app.NewStatus(wsr))
 	weatherQh := qhErrMdw(app.NewWeather(wsr))
 	logsQh := qhErrMdw(app.NewLogs(wsr))
+
+	executeCh := chErrMdw(app.NewExecuteZone(wsr))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken())
@@ -63,6 +68,16 @@ func main() {
 		cancel()
 	}()
 
+	execute(updates, ctx, statusQh, weatherQh, logsQh, executeCh, bot)
+}
+
+func execute(
+	updates tgbotapi.UpdatesChannel,
+	ctx context.Context,
+	statusQh, weatherQh, logsQh cqs.QueryHandler,
+	executeCh cqs.CommandHandler,
+	bot *tgbotapi.BotAPI,
+) {
 	msgs := telegram2.NewMessages()
 	for update := range updates {
 		if update.Message == nil {
@@ -83,6 +98,15 @@ func main() {
 					number = 2
 				}
 				telegram2.Logs(ctx, logsQh, chatID, &msgs, number)
+			case executionCommand:
+				arguments := strings.Fields(update.Message.CommandArguments())
+				zone := arguments[0]
+				seconds, err := strconv.Atoi(arguments[1])
+				if err != nil {
+					msgs.AddMessage(tgbotapi.NewMessage(chatID, fmt.Sprintf("invalid seconds number: %s", arguments[1])))
+				} else {
+					telegram2.ExecuteZone(ctx, executeCh, chatID, &msgs, zone, seconds)
+				}
 			}
 			for _, j := range msgs.GetMessages() {
 				_, _ = bot.Send(j)

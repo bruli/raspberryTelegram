@@ -4,51 +4,42 @@ import (
 	"context"
 	"errors"
 	"github.com/bruli/rasberryTelegram/internal/app"
-	"github.com/bruli/rasberryTelegram/internal/domain/log"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
-func TestLogsHandle(t *testing.T) {
+func TestExecuteZoneHandle(t *testing.T) {
 	errTest := errors.New("")
-	logs := []log.Log{
-		{},
-		{},
-	}
 	tests := []struct {
 		name                 string
 		repoErr, expectedErr error
-		logs                 []log.Log
 	}{
 		{
 			name:        "and repository returns an error, then it returns same error",
-			repoErr:     errTest,
 			expectedErr: errTest,
+			repoErr:     errTest,
 		},
 		{
-			name: "and repository returns logs, then it returns a valid result",
-			logs: logs,
+			name: "and repository returns nil, then it returns nil",
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
-		t.Run(`Given a Logs query handler,
+		t.Run(`Given an ExecuteZone command handler,
 		when Handle method is called `+tt.name, func(t *testing.T) {
 			t.Parallel()
-			lr := &LogsRepositoryMock{
-				FindLogsFunc: func(ctx context.Context, number int) ([]log.Log, error) {
-					return tt.logs, tt.repoErr
+			er := &ExecutionRepositoryMock{
+				ExecuteZoneFunc: func(ctx context.Context, zone string, seconds int) error {
+					return tt.repoErr
 				},
 			}
-			handler := app.NewLogs(lr)
-			result, err := handler.Handle(context.Background(), app.LogsQuery{})
+			handler := app.NewExecuteZone(er)
+			_, err := handler.Handle(context.Background(), app.ExecuteZoneCommand{})
 			if err != nil {
 				require.IsType(t, tt.expectedErr, err)
 				return
 			}
-			_, ok := result.([]string)
 			require.Equal(t, tt.expectedErr, err)
-			require.True(t, ok)
 		})
 	}
 }

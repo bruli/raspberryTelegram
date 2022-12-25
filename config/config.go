@@ -64,6 +64,9 @@ func NewConfig() (Config, error) {
 		return Config{}, err
 	}
 	wsToken, err := env.Value(WSServerToken)
+	if err != nil {
+		return Config{}, err
+	}
 	return Config{
 		serverUrl:     serverURL,
 		telegramToken: token,

@@ -41,5 +41,3 @@ func buildLogs(logs []log.Log) []string {
 func NewLogs(lr LogsRepository) Logs {
 	return Logs{lr: lr}
 }
-
-type LogResult string

@@ -14,6 +14,14 @@ type WaterSystemRepository struct {
 	api
 }
 
+func (s WaterSystemRepository) ExecuteZone(ctx context.Context, zone string, seconds int) error {
+	err := s.pkg.ExecuteZone(ctx, zone, seconds)
+	if err != nil {
+		return fmt.Errorf("failed to execute zone %q: %w", zone, err)
+	}
+	return nil
+}
+
 func (s WaterSystemRepository) FindLogs(ctx context.Context, number int) ([]log.Log, error) {
 	logs, err := s.pkg.GetLogs(ctx, number)
 	if err != nil {

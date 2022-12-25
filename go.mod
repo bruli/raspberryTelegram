@@ -4,13 +4,13 @@ go 1.19
 
 require (
 	github.com/bruli/raspberryRainSensor v0.0.0-20221224162955-10db9595164a
+	github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/rs/zerolog v1.28.0
 	github.com/stretchr/testify v1.7.1
 )
 
 require (
-	github.com/bruli/raspberryWaterSystem v0.0.0-20220828192110-e1afd252c75f // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-chi/chi v1.5.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect

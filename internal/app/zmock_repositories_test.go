@@ -215,3 +215,81 @@ func (mock *LogsRepositoryMock) FindLogsCalls() []struct {
 	mock.lockFindLogs.RUnlock()
 	return calls
 }
+
+// Ensure, that ExecutionRepositoryMock does implement app.ExecutionRepository.
+// If this is not the case, regenerate this file with moq.
+var _ app.ExecutionRepository = &ExecutionRepositoryMock{}
+
+// ExecutionRepositoryMock is a mock implementation of app.ExecutionRepository.
+//
+//	func TestSomethingThatUsesExecutionRepository(t *testing.T) {
+//
+//		// make and configure a mocked app.ExecutionRepository
+//		mockedExecutionRepository := &ExecutionRepositoryMock{
+//			ExecuteZoneFunc: func(ctx context.Context, zone string, seconds int) error {
+//				panic("mock out the ExecuteZone method")
+//			},
+//		}
+//
+//		// use mockedExecutionRepository in code that requires app.ExecutionRepository
+//		// and then make assertions.
+//
+//	}
+type ExecutionRepositoryMock struct {
+	// ExecuteZoneFunc mocks the ExecuteZone method.
+	ExecuteZoneFunc func(ctx context.Context, zone string, seconds int) error
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// ExecuteZone holds details about calls to the ExecuteZone method.
+		ExecuteZone []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Zone is the zone argument value.
+			Zone string
+			// Seconds is the seconds argument value.
+			Seconds int
+		}
+	}
+	lockExecuteZone sync.RWMutex
+}
+
+// ExecuteZone calls ExecuteZoneFunc.
+func (mock *ExecutionRepositoryMock) ExecuteZone(ctx context.Context, zone string, seconds int) error {
+	if mock.ExecuteZoneFunc == nil {
+		panic("ExecutionRepositoryMock.ExecuteZoneFunc: method is nil but ExecutionRepository.ExecuteZone was just called")
+	}
+	callInfo := struct {
+		Ctx     context.Context
+		Zone    string
+		Seconds int
+	}{
+		Ctx:     ctx,
+		Zone:    zone,
+		Seconds: seconds,
+	}
+	mock.lockExecuteZone.Lock()
+	mock.calls.ExecuteZone = append(mock.calls.ExecuteZone, callInfo)
+	mock.lockExecuteZone.Unlock()
+	return mock.ExecuteZoneFunc(ctx, zone, seconds)
+}
+
+// ExecuteZoneCalls gets all the calls that were made to ExecuteZone.
+// Check the length with:
+//
+//	len(mockedExecutionRepository.ExecuteZoneCalls())
+func (mock *ExecutionRepositoryMock) ExecuteZoneCalls() []struct {
+	Ctx     context.Context
+	Zone    string
+	Seconds int
+} {
+	var calls []struct {
+		Ctx     context.Context
+		Zone    string
+		Seconds int
+	}
+	mock.lockExecuteZone.RLock()
+	calls = mock.calls.ExecuteZone
+	mock.lockExecuteZone.RUnlock()
+	return calls
+}
