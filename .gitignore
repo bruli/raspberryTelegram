@@ -1,0 +1,4 @@
+.idea
+/deploy/password
+/deploy/assets
+!/deploy/assets/.gitkeep
