@@ -11,7 +11,7 @@ func Help(ctx context.Context, chatID int64, msgs *Messages) {
 	case <-ctx.Done():
 		return
 	default:
-		msg := tgbotapi.NewMessage(chatID, "Type: /temp, /status, /log [limit], /water [zone] [seconds].")
+		msg := tgbotapi.NewMessage(chatID, "Type: /weather, /status, /log [limit], /water [zone] [seconds].")
 		msgs.AddMessage(msg)
 	}
 }

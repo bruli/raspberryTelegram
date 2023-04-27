@@ -1,4 +1,4 @@
 .idea
-/deploy/password
-/deploy/assets
-!/deploy/assets/.gitkeep
+/devops/ansible/password
+/devops/ansible/assets
+!/devops/ansible/assets/.gitkeep

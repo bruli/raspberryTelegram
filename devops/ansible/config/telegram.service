@@ -7,7 +7,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
-ExecStart=/home/pi/telegram
+ExecStart=/home/pi/telegram/telegram
 EnvironmentFile=/etc/systemd/system/telegram.conf
 
 [Install]
