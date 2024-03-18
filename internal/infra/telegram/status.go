@@ -22,6 +22,7 @@ func Status(ctx context.Context, qh cqs.QueryHandler, chatID int64, msgs *Messag
 	buildMessage(msgs, msg, fmt.Sprintf("Current temperature: %v *C", st.Temperature()))
 	buildMessage(msgs, msg, fmt.Sprintf("Current humidity: %v", st.Humidity()))
 	buildMessage(msgs, msg, fmt.Sprintf("Is raining: %v", st.Raining()))
+	buildMessage(msgs, msg, fmt.Sprintf("Active: %v", st.Active()))
 	if st.UpdatedAt() != nil {
 		buildMessage(msgs, msg, fmt.Sprintf("System updated at: %s", st.UpdatedAt().Date()))
 	}

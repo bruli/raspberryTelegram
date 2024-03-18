@@ -8,32 +8,38 @@ type Status struct {
 	systemStartedAt vo.Time
 	temperature     int
 	updatedAt       *vo.Time
+	active          bool
 }
 
-func (s Status) Humidity() int {
+func (s *Status) Active() bool {
+	return s.active
+}
+
+func (s *Status) Humidity() int {
 	return s.humidity
 }
 
-func (s Status) Raining() bool {
+func (s *Status) Raining() bool {
 	return s.raining
 }
 
-func (s Status) SystemStartedAt() vo.Time {
+func (s *Status) SystemStartedAt() vo.Time {
 	return s.systemStartedAt
 }
 
-func (s Status) Temperature() int {
+func (s *Status) Temperature() int {
 	return s.temperature
 }
 
-func (s Status) UpdatedAt() *vo.Time {
+func (s *Status) UpdatedAt() *vo.Time {
 	return s.updatedAt
 }
 
-func (s *Status) Hydrate(humidity int, raining bool, startedAt vo.Time, temperature int, updatedAt *vo.Time) {
+func (s *Status) Hydrate(humidity int, raining bool, startedAt vo.Time, temperature int, updatedAt *vo.Time, active bool) {
 	s.humidity = humidity
 	s.raining = raining
 	s.systemStartedAt = startedAt
 	s.temperature = temperature
 	s.updatedAt = updatedAt
+	s.active = active
 }
