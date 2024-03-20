@@ -21,11 +21,13 @@ import (
 )
 
 const (
-	helpCommand      = "help"
-	statusCommand    = "status"
-	weatherCommand   = "weather"
-	logCommand       = "log"
-	executionCommand = "water"
+	helpCommand       = "help"
+	statusCommand     = "status"
+	weatherCommand    = "weather"
+	logCommand        = "log"
+	executionCommand  = "water"
+	deactivateCommand = "deactivate"
+	activateCommand   = "activate"
 )
 
 func main() {
@@ -46,6 +48,7 @@ func main() {
 	logsQh := qhErrMdw(app.NewLogs(wsr))
 
 	executeCh := chErrMdw(app.NewExecuteZone(wsr))
+	actDeactCh := chErrMdw(app.NewActivateDeactivateServer(wsr))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken())
@@ -69,13 +72,15 @@ func main() {
 		cancel()
 	}()
 
-	execute(updates, ctx, statusQh, weatherQh, logsQh, executeCh, bot)
+	execute(updates, ctx, statusQh, actDeactCh, weatherQh, logsQh, executeCh, bot)
 }
 
 func execute(
 	updates tgbotapi.UpdatesChannel,
 	ctx context.Context,
-	statusQh, weatherQh, logsQh cqs.QueryHandler,
+	statusQh cqs.QueryHandler,
+	actDeactCh cqs.CommandHandler,
+	weatherQh, logsQh cqs.QueryHandler,
 	executeCh cqs.CommandHandler,
 	bot *tgbotapi.BotAPI,
 ) {
@@ -91,6 +96,10 @@ func execute(
 				telegram2.Help(ctx, chatID, &msgs)
 			case statusCommand:
 				telegram2.Status(ctx, statusQh, chatID, &msgs)
+			case activateCommand:
+				telegram2.ActivateDeactivate(ctx, actDeactCh, true, chatID, &msgs)
+			case deactivateCommand:
+				telegram2.ActivateDeactivate(ctx, actDeactCh, false, chatID, &msgs)
 			case weatherCommand:
 				telegram2.Weather(ctx, weatherQh, chatID, &msgs)
 			case logCommand:

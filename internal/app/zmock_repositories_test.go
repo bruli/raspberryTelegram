@@ -22,6 +22,9 @@ var _ app.StatusRepository = &StatusRepositoryMock{}
 //
 //		// make and configure a mocked app.StatusRepository
 //		mockedStatusRepository := &StatusRepositoryMock{
+//			ActivateDeactivateFunc: func(ctx context.Context, activate bool) error {
+//				panic("mock out the ActivateDeactivate method")
+//			},
 //			FindStatusFunc: func(ctx context.Context) (status.Status, error) {
 //				panic("mock out the FindStatus method")
 //			},
@@ -32,18 +35,65 @@ var _ app.StatusRepository = &StatusRepositoryMock{}
 //
 //	}
 type StatusRepositoryMock struct {
+	// ActivateDeactivateFunc mocks the ActivateDeactivate method.
+	ActivateDeactivateFunc func(ctx context.Context, activate bool) error
+
 	// FindStatusFunc mocks the FindStatus method.
 	FindStatusFunc func(ctx context.Context) (status.Status, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// ActivateDeactivate holds details about calls to the ActivateDeactivate method.
+		ActivateDeactivate []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Activate is the activate argument value.
+			Activate bool
+		}
 		// FindStatus holds details about calls to the FindStatus method.
 		FindStatus []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 		}
 	}
-	lockFindStatus sync.RWMutex
+	lockActivateDeactivate sync.RWMutex
+	lockFindStatus         sync.RWMutex
+}
+
+// ActivateDeactivate calls ActivateDeactivateFunc.
+func (mock *StatusRepositoryMock) ActivateDeactivate(ctx context.Context, activate bool) error {
+	if mock.ActivateDeactivateFunc == nil {
+		panic("StatusRepositoryMock.ActivateDeactivateFunc: method is nil but StatusRepository.ActivateDeactivate was just called")
+	}
+	callInfo := struct {
+		Ctx      context.Context
+		Activate bool
+	}{
+		Ctx:      ctx,
+		Activate: activate,
+	}
+	mock.lockActivateDeactivate.Lock()
+	mock.calls.ActivateDeactivate = append(mock.calls.ActivateDeactivate, callInfo)
+	mock.lockActivateDeactivate.Unlock()
+	return mock.ActivateDeactivateFunc(ctx, activate)
+}
+
+// ActivateDeactivateCalls gets all the calls that were made to ActivateDeactivate.
+// Check the length with:
+//
+//	len(mockedStatusRepository.ActivateDeactivateCalls())
+func (mock *StatusRepositoryMock) ActivateDeactivateCalls() []struct {
+	Ctx      context.Context
+	Activate bool
+} {
+	var calls []struct {
+		Ctx      context.Context
+		Activate bool
+	}
+	mock.lockActivateDeactivate.RLock()
+	calls = mock.calls.ActivateDeactivate
+	mock.lockActivateDeactivate.RUnlock()
+	return calls
 }
 
 // FindStatus calls FindStatusFunc.

@@ -15,6 +15,14 @@ type WaterSystemRepository struct {
 	api
 }
 
+func (s WaterSystemRepository) ActivateDeactivate(ctx context.Context, activate bool) error {
+	err := s.pkg.Activate(ctx, activate)
+	if err != nil {
+		return fmt.Errorf("failed to activate/deactivate server: %w", err)
+	}
+	return nil
+}
+
 func (s WaterSystemRepository) ExecuteZone(ctx context.Context, zone string, seconds int) error {
 	err := s.pkg.ExecuteZone(ctx, zone, seconds)
 	if err != nil {

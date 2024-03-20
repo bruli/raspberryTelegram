@@ -1,3 +1,22 @@
+define help
+Usage: make <command>
+Commands:
+   help:                      Show this help information
+   test:                      Run unit tests
+   build:                     Compile the project
+   coverage:                  Run unit tests with coverage
+   encryptVault:              Encrypt vault secret file
+   decryptVault:              Decrypt vault secret file
+   deploy:                    Deploy the code to raspberry
+   lint:                      Execute go linter
+   docker-exec-builder:       Start builder docker container and entry inside it. Build project here.
+endef
+export help
+
+.PHONY: help
+help:
+	@echo "$$help"
+
 test:
 	go test -race ./...
 
