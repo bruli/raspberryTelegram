@@ -18,7 +18,7 @@ type Weather struct {
 	wr WeatherRepository
 }
 
-func (w Weather) Handle(ctx context.Context, _ cqs.Query) (cqs.QueryResult, error) {
+func (w Weather) Handle(ctx context.Context, _ cqs.Query) (any, error) {
 	return w.wr.FindWeather(ctx)
 }
 

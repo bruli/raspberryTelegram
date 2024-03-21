@@ -22,7 +22,7 @@ type Logs struct {
 	lr LogsRepository
 }
 
-func (l Logs) Handle(ctx context.Context, query cqs.Query) (cqs.QueryResult, error) {
+func (l Logs) Handle(ctx context.Context, query cqs.Query) (any, error) {
 	q, _ := query.(LogsQuery)
 	logs, err := l.lr.FindLogs(ctx, q.Number)
 	if err != nil {

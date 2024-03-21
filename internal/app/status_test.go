@@ -7,7 +7,6 @@ import (
 
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/status"
-	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +17,7 @@ func TestStatusHandle(t *testing.T) {
 		name                 string
 		status               status.Status
 		findErr, expectedErr error
-		expectedResult       cqs.QueryResult
+		expectedResult       any
 	}{
 		{
 			name:        "and repository returns an error, then it returns same error",

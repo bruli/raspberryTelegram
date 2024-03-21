@@ -7,7 +7,6 @@ import (
 
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/rasberryTelegram/internal/domain/weather"
-	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +17,7 @@ func TestWeatherHandle(t *testing.T) {
 		name                 string
 		weather              weather.Weather
 		repoErr, expectedErr error
-		expectedResult       cqs.QueryResult
+		expectedResult       any
 	}{
 		{
 			name:        "and repository returns an error, then it returns same error",

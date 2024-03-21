@@ -18,7 +18,7 @@ type Status struct {
 	sr StatusRepository
 }
 
-func (s Status) Handle(ctx context.Context, query cqs.Query) (cqs.QueryResult, error) {
+func (s Status) Handle(ctx context.Context, query cqs.Query) (any, error) {
 	return s.sr.FindStatus(ctx)
 }
 
