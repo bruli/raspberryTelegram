@@ -3,7 +3,7 @@ package telegram
 import (
 	"context"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func Help(ctx context.Context, chatID int64, msgs *Messages) {

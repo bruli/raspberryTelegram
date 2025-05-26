@@ -6,7 +6,7 @@ import (
 
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func Logs(ctx context.Context, qh cqs.QueryHandler, chatID int64, msgs *Messages, number int) {

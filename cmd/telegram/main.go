@@ -16,12 +16,11 @@ import (
 	"github.com/bruli/rasberryTelegram/internal/infra/api"
 	telegram2 "github.com/bruli/rasberryTelegram/internal/infra/telegram"
 	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/rs/zerolog"
 )
 
 const (
-	helpCommand       = "help"
 	statusCommand     = "status"
 	weatherCommand    = "weather"
 	logCommand        = "log"
@@ -58,11 +57,7 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	updates, err := bot.GetUpdatesChan(u)
-	if err != nil {
-		log.Fatal().Err(err).Msg("error updating telegram channel")
-	}
-
+	updates := bot.GetUpdatesChan(u)
 	/* signal handling */
 	go func() {
 		done := make(chan os.Signal, 1)
@@ -92,7 +87,7 @@ func execute(
 		chatID := update.Message.Chat.ID
 		if update.Message.IsCommand() {
 			switch update.Message.Command() {
-			case helpCommand:
+			default:
 				telegram2.Help(ctx, chatID, &msgs)
 			case statusCommand:
 				telegram2.Status(ctx, statusQh, chatID, &msgs)

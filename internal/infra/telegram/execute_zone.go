@@ -5,7 +5,7 @@ import (
 
 	"github.com/bruli/rasberryTelegram/internal/app"
 	"github.com/bruli/raspberryRainSensor/pkg/common/cqs"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func ExecuteZone(ctx context.Context, ch cqs.CommandHandler, chatID int64, msgs *Messages, zone string, seconds int) {
